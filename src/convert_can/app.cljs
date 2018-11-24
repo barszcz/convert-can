@@ -1,8 +1,9 @@
 (ns convert-can.app
-    (:require [reagent.core :as r]
-              [stylefy.core :refer [use-style]]
-              [re-frame.core :as rf]
-              [convert-can.util :refer [format-price]]))
+  (:require [reagent.core :as r]
+            [stylefy.core :refer [use-style]]
+            [re-frame.core :as rf]
+            [convert-can.util :refer [format-price]])
+  (:require-macros [convert-can.macros :refer [dispatch]]))
 
 (def layout-style
   {:display "grid"
@@ -33,12 +34,13 @@
   [:div (use-style item-card-style)
    [:img (use-style img-style {:src (:imageURL item)})]
    [:div
-    [:div (:name item)]
+    [:div [:strong (:name item)]]
     [:div (format-price (:price item))]
     (when-let [{:keys [amount totalPrice]} (:bulkPricing item)]
       [:div (str "or " amount " for " (format-price totalPrice))])
     [:button
-     {:on-click #(rf/dispatch [:add-item (:id item)])}
+    ;  {:on-click #(rf/dispatch [:add-item (:id item)])}
+     {:on-click (dispatch :add-item (:id item))}
      "Add to cart"]]])
 
 (defn catalog-list []
@@ -60,7 +62,8 @@
           ^{:key (:id item)}
           [cart-line item-with-qty])
         @(rf/subscribe [:items-in-cart]))
-   [:div "Total: " (format-price @(rf/subscribe [:total-price]))]])
+   [:div [:strong "Total: " (format-price @(rf/subscribe [:total-price]))]]
+   [:button {:on-click (dispatch :clear-cart)} "Clear"]])
 
 (defn root []
   [:div (use-style layout-style)

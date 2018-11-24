@@ -21,3 +21,8 @@
  :add-item
  (fn [db [_ id]]
    (update-in db [:cart id] inc)))
+
+(rf/reg-event-db
+ :clear-cart
+ (fn [db _]
+   (assoc db :cart (array-map))))
