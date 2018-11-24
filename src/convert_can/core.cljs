@@ -3,7 +3,8 @@
             [re-frame.core :as rf]
             [stylefy.core :as stylefy]
             [convert-can.app :as app]
-            [convert-can.events :as events]))
+            [convert-can.events :as events]
+            [convert-can.subs :as subs]))
 
 ;; Global styles
 (def body-style

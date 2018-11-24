@@ -6,7 +6,8 @@
   "Load in the catalog of products as a data structure."
   (as-> (inline-file "public/products-data.json") $
     (.parse js/JSON $)
-    (js->clj $ :keywordize-keys true)))
+    (js->clj $ :keywordize-keys true)
+    (:treats $)))
 
 (rf/reg-event-db
  :initialize
