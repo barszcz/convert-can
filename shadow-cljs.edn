@@ -3,7 +3,9 @@
  [[reagent "0.8.1"]
   [cider/cider-nrepl "0.18.0"]
   [org.roman01la/cljss "1.6.3"]
-  [stylefy "1.7.0"]]
+  [stylefy "1.7.0"]
+  [re-frame "0.10.6"]]
+
 
  :source-paths
  ["src"]

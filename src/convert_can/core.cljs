@@ -1,7 +1,9 @@
 (ns convert-can.core
   (:require [reagent.core :as r]
+            [re-frame.core :as rf]
             [stylefy.core :as stylefy]
-            [convert-can.app :as app]))
+            [convert-can.app :as app]
+            [convert-can.events :as events]))
 
 ;; Global styles
 (def body-style
@@ -12,7 +14,8 @@
 (defn start []
   (stylefy/init)
   (stylefy/tag "body" body-style)
+  (rf/dispatch-sync [:initialize])
   (r/render [app/root]
-    (.getElementById js/document "root")))
+            (.getElementById js/document "root")))
 
 (start)
