@@ -39,7 +39,7 @@
       [:div (str "or " amount " for " (format-price totalPrice))])
     [:button
      {:on-click #(rf/dispatch [:add-item (:id item)])}
-     "Add to card"]]])
+     "Add to cart"]]])
 
 (defn catalog-list []
   [:div
