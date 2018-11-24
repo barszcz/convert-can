@@ -1,0 +1,17 @@
+;; shadow-cljs configuration
+{:dependencies
+ [[reagent "0.8.1"]
+  [cider/cider-nrepl "0.18.0"]
+  [org.roman01la/cljss "1.6.3"]
+  [stylefy "1.7.0"]]
+
+ :source-paths
+ ["src"]
+
+ :builds
+ {:app {:target     :browser
+        :output-dir "public/js"
+        :asset-path "/js"
+        :modules    {:main {:entries [convert-can.core]}}
+        :devtools   {:http-root "public"
+                     :http-port 8020}}}}
