@@ -59,7 +59,8 @@
    (map (fn [{item :item :as item-with-qty}]
           ^{:key (:id item)}
           [cart-line item-with-qty])
-        @(rf/subscribe [:items-in-cart]))])
+        @(rf/subscribe [:items-in-cart]))
+   [:div "Total: " (format-price @(rf/subscribe [:total-price]))]])
 
 (defn root []
   [:div (use-style layout-style)

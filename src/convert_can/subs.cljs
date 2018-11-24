@@ -38,3 +38,9 @@
                          {:item item
                           :qty qty
                           :price (compute-item-price qty item)})) cart)))
+
+(rf/reg-sub
+ :total-price
+ :<- [:items-in-cart]
+ (fn [items _]
+   (reduce + (map :price items))))
