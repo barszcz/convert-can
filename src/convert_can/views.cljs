@@ -59,17 +59,16 @@
 
 ;; CATALOG COMPONENTS
 
-(defn catalog-item [item]
+(defn catalog-item [{:keys [imageURL name price bulkPricing id]}]
   [:div (use-style item-card-style)
-   [:img (use-style img-style {:src (:imageURL item)})]
+   [:img (use-style img-style {:src imageURL})]
    [:div
-    [:div [:strong (:name item)]]
-    [:div (format-price (:price item))]
-    (when-let [{:keys [amount totalPrice]} (:bulkPricing item)]
+    [:div [:strong name]]
+    [:div (format-price price)]
+    (when-let [{:keys [amount totalPrice]} bulkPricing]
       [:div (str "(or " amount " for " (format-price totalPrice) ")")])
     [:button
-    ;  {:on-click #(rf/dispatch [:add-item (:id item)])}
-     {:on-click (dispatch :add-item (:id item))}
+     {:on-click (dispatch :add-item id)}
      "Add to cart"]]])
 
 (defn catalog-list []
