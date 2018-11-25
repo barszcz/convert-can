@@ -5,6 +5,9 @@
             [convert-can.util :refer [format-price]])
   (:require-macros [convert-can.macros :refer [dispatch]]))
 
+
+;; CSS STUFF
+
 (def layout-style
   {:display "grid"
    :grid-template-columns "2fr 1fr"
@@ -54,6 +57,8 @@
 (def cart-item-style
   {:margin-bottom "10px"})
 
+;; CATALOG COMPONENTS
+
 (defn catalog-item [item]
   [:div (use-style item-card-style)
    [:img (use-style img-style {:src (:imageURL item)})]
@@ -74,32 +79,37 @@
           [catalog-item item])
         @(rf/subscribe [:catalog]))])
 
-(defn cart-line [{:keys [item qty price]}]
+;; CART COMPONENTS
+
+(defn item-button-group [item-id dec-disabled]
+  [:span (use-style button-group-style)
+   [:button
+    {:on-click (dispatch :add-item item-id)} "+"]
+   [:button
+    {:on-click (dispatch :decrement-item item-id)
+     :disabled dec-disabled} "-"]
+   [:button
+    {:on-click (dispatch :remove-item item-id)} "Remove"]])
+
+(defn cart-item [{:keys [item qty price]}]
   [:div (use-style cart-item-style)
    [:div
     [:strong (:name item)] " x " [:strong qty]]
    [:div
     "Price: " [:strong (format-price price)]
-    [:span (use-style button-group-style)
-     [:button
-      {:on-click (dispatch :add-item (:id item))} "+"]
-     [:button
-      {:on-click (dispatch :decrement-item (:id item))
-       :disabled (= qty 1)} "-"]
-     [:button
-      {:on-click (dispatch :remove-item (:id item))} "Remove"]]]])
-
-(defn cart-summary []
-  [:div (use-style cart-summary-style)
-   [:div [:strong "Total: " (format-price @(rf/subscribe [:total-price]))]]
-   [:button {:on-click (dispatch :clear-cart)} "Clear"]])
+    [item-button-group (:id item) (= qty 1)]]])
 
 (defn cart-items []
   [:div
    (map (fn [{item :item :as item-with-qty}]
           ^{:key (:id item)}
-          [cart-line item-with-qty])
+          [cart-item item-with-qty])
         @(rf/subscribe [:items-in-cart]))])
+
+(defn cart-summary []
+  [:div (use-style cart-summary-style)
+   [:div [:strong "Total: " (format-price @(rf/subscribe [:total-price]))]]
+   [:button {:on-click (dispatch :clear-cart)} "Clear"]])
 
 (defn shopping-cart []
   [:div
@@ -107,6 +117,8 @@
     [:h2 (use-style cart-subhead-style) "Cart"]
     [cart-items]
     [cart-summary]]])
+
+;; TIE IT ALL TOGETHER
 
 (defn root []
   [:div (use-style layout-style)

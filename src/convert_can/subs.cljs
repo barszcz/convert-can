@@ -21,7 +21,7 @@
     (compute-individual-price qty price)))
 
 (defn- compute-item-price [qty item]
-  "Wrapper letting us pass in a catalog item data structure to the price function"
+  "Wrapper letting us pass in a catalog item data structure to the price function."
   (compute-price qty (:price item) (:bulkPricing item)))
 
 (rf/reg-sub
@@ -39,8 +39,8 @@
  :<- [:catalog]
  :<- [:cart]
  (fn [[catalog cart] _]
-   "This one's inefficient because it'll recompute all the prices
-    whenever one item's quantity changes. We're dealing with a small enough
+   "This one's inefficient because it'll recompute all the prices whenever
+    one item's quantity changes. We're dealing with a small enough
     dataset that this is fine but it would be low-hanging fruit for optimization."
    (map (fn [[id qty]] (let [item (catalog id)]
                          {:item item
