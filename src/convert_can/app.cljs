@@ -9,6 +9,7 @@
   {:display "grid"
    :grid-template-columns "2fr 1fr"
    :grid-column-gap "30%"
+   :grid-row-gap "20px"
    :margin "auto"
    :width "90%"})
 
@@ -25,10 +26,33 @@
   :max-height "100px"})
 
 (def header-style
-  {:font-size "24px"
+  {:grid-column "1 / 3"
+   :text-align "center"
+   :font-size "24px"
    :font-weight "bold"
    :padding "0"
    :margin "0"})
+
+(def cart-style
+  {:border "2px solid #aaa"
+   :padding "10px"
+   :display "flex"
+   :flex-direction "column"
+   :justify-content "space-between"
+   })
+
+(def button-group-style
+  {:margin-left "10px"})
+
+(def cart-subhead-style
+  {:margin "0 auto"})
+
+(def cart-summary-style
+  {:align-self "center"
+   :text-align "center"})
+
+(def cart-item-style
+  {:margin-bottom "10px"})
 
 (defn catalog-item [item]
   [:div (use-style item-card-style)
@@ -37,7 +61,7 @@
     [:div [:strong (:name item)]]
     [:div (format-price (:price item))]
     (when-let [{:keys [amount totalPrice]} (:bulkPricing item)]
-      [:div (str "or " amount " for " (format-price totalPrice))])
+      [:div (str "(or " amount " for " (format-price totalPrice) ")")])
     [:button
     ;  {:on-click #(rf/dispatch [:add-item (:id item)])}
      {:on-click (dispatch :add-item (:id item))}
@@ -51,21 +75,41 @@
         @(rf/subscribe [:catalog]))])
 
 (defn cart-line [{:keys [item qty price]}]
-  [:div
-   [:div (:name item)]
-   [:div qty]
-   [:div "Price: " (format-price price)]])
+  [:div (use-style cart-item-style)
+   [:div
+    [:strong (:name item)] " x " [:strong qty]]
+   [:div
+    "Price: " [:strong (format-price price)]
+    [:span (use-style button-group-style)
+     [:button
+      {:on-click (dispatch :add-item (:id item))} "+"]
+     [:button
+      {:on-click (dispatch :decrement-item (:id item))
+       :disabled (= qty 1)} "-"]
+     [:button
+      {:on-click (dispatch :remove-item (:id item))} "Remove"]]]])
 
-(defn shopping-cart []
+(defn cart-summary []
+  [:div (use-style cart-summary-style)
+   [:div [:strong "Total: " (format-price @(rf/subscribe [:total-price]))]]
+   [:button {:on-click (dispatch :clear-cart)} "Clear"]])
+
+(defn cart-items []
   [:div
    (map (fn [{item :item :as item-with-qty}]
           ^{:key (:id item)}
           [cart-line item-with-qty])
-        @(rf/subscribe [:items-in-cart]))
-   [:div [:strong "Total: " (format-price @(rf/subscribe [:total-price]))]]
-   [:button {:on-click (dispatch :clear-cart)} "Clear"]])
+        @(rf/subscribe [:items-in-cart]))])
+
+(defn shopping-cart []
+  [:div
+   [:div (use-style cart-style)
+    [:h2 (use-style cart-subhead-style) "Cart"]
+    [cart-items]
+    [cart-summary]]])
 
 (defn root []
   [:div (use-style layout-style)
-   [catalog-list]
-   [shopping-cart]])
+   [:h1 (use-style header-style) "Bakery"]
+  [catalog-list]
+  [shopping-cart]])
