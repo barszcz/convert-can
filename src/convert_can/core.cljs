@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [stylefy.core :as stylefy]
-            [convert-can.app :as app]
+            [convert-can.views :as views]
             [convert-can.events :as events]
             [convert-can.subs :as subs]))
 
@@ -16,7 +16,7 @@
   (stylefy/init)
   (stylefy/tag "body" body-style)
   (rf/dispatch-sync [:initialize])
-  (r/render [app/root]
+  (r/render [views/root]
             (.getElementById js/document "root")))
 
 (start)

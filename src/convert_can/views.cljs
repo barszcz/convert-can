@@ -1,4 +1,4 @@
-(ns convert-can.app
+(ns convert-can.views
   (:require [reagent.core :as r]
             [stylefy.core :refer [use-style]]
             [re-frame.core :as rf]
