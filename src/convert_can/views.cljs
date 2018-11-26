@@ -108,6 +108,7 @@
 (defn cart-summary []
   [:div (use-style cart-summary-style)
    [:div [:strong "Total: " (format-price @(rf/subscribe [:total-price]))]]
+   [:button "Checkout"] ;; no-op, but adding it for completion's sake
    [:button {:on-click (dispatch :clear-cart)} "Clear"]])
 
 (defn shopping-cart []
